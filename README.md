@@ -1,4 +1,4 @@
 # Online-Request-Form-Enrollment Combination of HTML, AJAX, PHP AND MYSQL
 # CREATED BY: CLINT RANKIN crankinadmiral@gmail.com
 # DATE 5-22-2016
-# This webpage form allows users within our company to submit new requests to set up a new username for access to our online shopping cart. It employs many field checks to make sure the employee types in the correct data. For example, it will not let them submit a duplicate username. Password must be a certain legth. Etc.
+# This is an internal webpage form designed in php/html/js/sql that allows users within a certain company to submit new requests to set up a new username for access to our online shopping cart. It employs many field checks to make sure the employee types in the correct data. For example, it will not let them submit a duplicate username. It will tell them real-time as they type the username whether or not it's avaialble for use. Password must be a certain legth. Much of the code in this project is specific to a certain company that I created the code for. It would have to have significant code changes and database changes to utilize it outside of the company I designed it for.
