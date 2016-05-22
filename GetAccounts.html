@@ -1,0 +1,166 @@
+
+<script type="text/javascript">
+var xmlHttp // xmlHttp variable
+var xmlHttp2
+
+function GetXmlHttpObject(){ // This function we will use to call our xmlhttpobject.
+	var objXMLHttp=null // Sets objXMLHttp to null as default.
+	if (window.XMLHttpRequest){ // If we are using Netscape or any other browser than IE lets use xmlhttp.
+	objXMLHttp=new XMLHttpRequest() // Creates a xmlhttp request.
+	}else if (window.ActiveXObject){ // ElseIf we are using IE lets use Active X.
+	objXMLHttp=new ActiveXObject("Microsoft.XMLHTTP") // Creates a new Active X Object.
+	} // End ElseIf.
+	return objXMLHttp // Returns the xhttp object.
+} // Close Function
+
+
+function getAccounts(account1){
+	
+	 //this checks to see if the options are already there. If account options are these then do nothing.
+		
+			xmlHttp_getAccounts=GetXmlHttpObject(); // Creates a new Xmlhttp object.
+			if (xmlHttp_getAccounts==null){ // If it cannot create a new Xmlhttp object.
+			alert ("Browser does not support HTTP Request") // Alert Them!
+			return // Returns.
+			} // End If.
+
+			var url="GetAccounts.php?check="+account1; // Url that we will use to check the username.
+			xmlHttp_getAccounts.open("GET",url,true) // Opens the URL using GET
+			xmlHttp_getAccounts.onreadystatechange = function () { // This is the most important piece of the puzzle, if onreadystatechange is equal to 4 than that means the request is done.
+				if (xmlHttp_getAccounts.readyState == 4) { // If the onreadystatechange is equal to 4 lets show the response text.
+					if(xmlHttp_getAccounts.responseText == 'Y'){
+							document.getElementById('ppY').checked = true;
+						}else{
+							document.getElementById('ppN').checked = true;
+						}
+						//alert(xmlHttp_getAccounts.responseText);
+					}
+			}; // Close Function
+			xmlHttp_getAccounts.send(null); // Sends NULL instead of sending data.
+}
+
+function getLocation(account1){
+	
+		if(account1 != ''){
+			
+		
+			xmlHttp=GetXmlHttpObject(); // Creates a new Xmlhttp object.
+			if (xmlHttp==null){ // If it cannot create a new Xmlhttp object.
+			alert ("Browser does not support HTTP Request") // Alert Them!
+			return // Returns.
+			} // End If.
+			
+			var url="GetAccounts.php?account4loc="+account1; // Url that we will use to check the username.
+			xmlHttp.open("GET",url,true) // Opens the URL using GET
+			xmlHttp.onreadystatechange = function () { // This is the most important piece of the puzzle, if onreadystatechange is equal to 4 than that means the request is done.
+				if (xmlHttp.readyState == 4) { // If the onreadystatechange is equal to 4 lets show the response text.
+					if(xmlHttp.responseText == 'No Data'){
+							alert('Could not find what the "Location field" for this account number should be set to. Looks like you may have just asked to have this account set up in DDMS. Please Wait up to 30mins for things to update then try again. If you still get this message after 30 mins please call the I.T. Dept. Sorry for the inconvenience');
+					}else if (xmlHttp.responseText == '1'){
+						document.getElementById('loc1').checked = true;											
+					}else if (xmlHttp.responseText == '2'){
+						document.getElementById('loc2').checked = true;
+					}else if (xmlHttp.responseText == '3'){
+						document.getElementById('loc3').checked = true;	
+					}else if (xmlHttp.responseText == '4'){
+						document.getElementById('loc4').checked = true;
+					}else if (xmlHttp.responseText == '5'){
+						document.getElementById('loc5').checked = true;
+					}else if (xmlHttp.responseText == 'employee'){
+						document.getElementById('loc1').disabled = false;
+						document.getElementById('loc2').disabled = false;
+						document.getElementById('loc3').disabled = false;
+						document.getElementById('loc4').disabled = false;
+						document.getElementById('loc5').disabled = false;
+						document.getElementById('loc1').checked = false;
+						document.getElementById('loc2').checked = false;
+						document.getElementById('loc3').checked = false;
+						document.getElementById('loc4').checked = false;
+						document.getElementById('loc5').checked = false;
+						alert('Looks like this account is for a employee. Please select appropriate location.');
+					}else{
+						alert('Could not set Location Field. Call I.T. Dept. You will not be allowed to proceed for right now until I.T. gets this fixed. Sorry for the inconvenience');
+					}
+				}
+			};
+}			// Close Function
+			xmlHttp.send(null); // Sends NULL instead of sending data.
+}
+		
+
+
+function getDepts(account){ // 
+	var e1 = document.getElementById('Dept'); 
+	var Dept_test = document.getElementById('Dept').selectedIndex;
+	if(Dept_test == 0){
+		if(account != ''){ //this checks to see if the options are already there. If account options are these then do nothing.
+		
+			xmlHttp_getDepts=GetXmlHttpObject(); // Creates a new Xmlhttp object.
+			if (xmlHttp_getDepts==null){ // If it cannot create a new Xmlhttp object.
+			alert ("Browser does not support HTTP Request") // Alert Them!
+			return // Returns.
+			} // End If.
+
+			var url="GetAccounts.php?account="+account; // Url that we will use to check the username.
+			xmlHttp_getDepts.open("GET",url,true) // Opens the URL using GET
+			xmlHttp_getDepts.onreadystatechange = function () { // This is the most important piece of the puzzle, if onreadystatechange is equal to 4 than that means the request is done.
+				if (xmlHttp_getDepts.readyState == 4) { // If the onreadystatechange is equal to 4 lets show the response text.
+					document.getElementById("Dept").innerHTML = xmlHttp_getDepts.responseText; // Updates the div with the response text from check.php
+				} // End If.
+			}; // Close Function
+			xmlHttp_getDepts.send(null); // Sends NULL instead of sending data.
+		}else{alert('Error - Either you have not picked out an Account Number yet or there was some other sort of error. You may want to contact the I.T. dept');} // Close Function.
+	}	
+}
+
+function order_entry_check(account2,dept2){
+		if(account2 != ''){ //this checks to see if the options are already there. If account options are these then do nothing.
+		
+			xmlHttp_order_entry_check=GetXmlHttpObject(); // Creates a new Xmlhttp object.
+			if (xmlHttp_order_entry_check==null){ // If it cannot create a new Xmlhttp object.
+			alert ("Browser does not support HTTP Request") // Alert Them!
+			return // Returns.
+			} // End If.
+
+			var donotsubmit = 0;
+			var url="GetAccounts.php?orderentry=1&account2="+account2+"&dept2="+dept2; // Url that we will use to check the username.
+			xmlHttp_order_entry_check.open("GET",url,true) // Opens the URL using GET
+			xmlHttp_order_entry_check.onreadystatechange = function () { // This is the most important piece of the puzzle, if onreadystatechange is equal to 4 than that means the request is done.
+				if (xmlHttp_order_entry_check.readyState == 4) { // If the onreadystatechange is equal to 4 lets show the response text.
+					if(xmlHttp_order_entry_check.responseText != 'fine'){
+					var order_entry_exempt0 = xmlHttp_order_entry_check.responseText;
+						if(dept2 != ''){
+							var text0 = 'Department combination ';
+							var text1 = ' Dept:'+dept2+'.';
+						}else{
+							var text0 = '';
+							var text1 = '.';
+						}
+						alert('The Account '+text0+'you have choose is blocked from ordering by our Accounting Department. Until the Accounting Department removes the block you will not be able to select Account:'+account2+text1+' Once they remove the block it could still take up to 15mins before you can set them up. You can tell the Accouting Dept there is a '+order_entry_exempt0+' in the \'Order Entry Exempt\' section. Just leave this page up so you dont have to retype everything & once the block is removed and up to 15 mins have went by you will be able to submit the form. Sorry for the inconvenience');
+						return false;
+					}else{
+						//document.forms["requestform"].submit();
+						//document.requestform.action='index.php';
+						document.forms['requestform'].onsubmit();
+					}
+				} // End If.
+			}; // Close Function
+			xmlHttp_order_entry_check.send(null); // Sends NULL instead of sending data.
+		}else if(account2 == ''){
+			alert("Error - No Account was typed in.");
+		}else{
+			alert('Call I.T. Dept & tell them that an error has occured. The error is on Order Entry Check.');
+			}
+}
+function fix_DisabledItems(){
+	document.getElementById('loc1').disabled = false;
+	document.getElementById('loc2').disabled = false;
+	document.getElementById('loc3').disabled = false;
+	document.getElementById('loc4').disabled = false;
+	document.getElementById('loc5').disabled = false;
+	document.getElementById('ppY').disabled = false;
+	document.getElementById('ppN').disabled = false;
+	return true;
+}
+
+</script>

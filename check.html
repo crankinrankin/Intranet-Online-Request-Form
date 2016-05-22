@@ -1,0 +1,43 @@
+
+<script type="text/javascript" src="Sajax2.php"></script>
+
+	<?php
+	sajax_show_javascript();
+	?>
+	function check_handle(result) {
+		if(result[0] == 'yes') {
+			document.getElementById('not_available').style.display = 'none';
+			document.getElementById('available').style.display = 'block';
+		}
+		else {
+			document.getElementById('available').style.display = 'none';
+			document.getElementById('not_available').style.display = 'block';
+			var str = 'Sorry that username is not available try these <br />';
+			for(i = 1; i < result[1]; i++) {
+				str += "<input type=\"radio\" name=\"try\" onclick=\"switch_username('"+result[i+1]+"')\"/>" + result[i+1] + "<br />";
+			}
+			document.getElementById('not_available').innerHTML = str;
+		}
+	}
+
+	function check_user_exist() {
+		var username = document.getElementById('username').value;
+		x_check_user_exist(username, check_handle);
+	}
+
+	function switch_username(username) {
+		document.getElementById('username').value = username;
+	}
+
+	
+	<form>
+	<input type="text" name="username" id="username" size="20" value="tom">
+	<input type="button" name="check" value="Check Username"
+		onclick="check_user_exist(); return false;">
+	<div id="available">
+		Username is available!
+	</div>
+	<div id="not_available">
+		Sorry that username is not available.
+	</div>
+</form>

@@ -1,0 +1,28 @@
+<html>
+<head>
+<script type="text/javascript">
+function validate_username2(field,alerttxt)
+{
+with (field)
+{
+usernameresult=value.match("Not Available");
+if (usernameresult=="Not Available") 
+  {alert(alerttxt);return false;}
+else {return true;}
+}
+}function bad_username(thisform)
+{
+with (thisform)
+{
+if (validate_username2(usernameresult,"Opps! Did you miss up above where it says that USERNAME is already taken?")==false)
+  {usernameresult.focus();return false;}
+}
+}
+</script>
+
+</head><body>
+<form action="submitpage.htm" onsubmit="return(bad_username(this));" method="post">
+Username: <input type="hidden" Value="Not Available" div id="usernameresult" size="30">
+<input type="submit" value="Submit"> 
+</form>
+</body></html>

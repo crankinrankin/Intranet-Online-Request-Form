@@ -1,0 +1,89 @@
+<script type="text/javascript">
+
+var xmlHttp // xmlHttp variable
+
+function GetXmlHttpObject(){ // This function we will use to call our xmlhttpobject.
+	var objXMLHttp=null // Sets objXMLHttp to null as default.
+	if (window.XMLHttpRequest){ // If we are using Netscape or any other browser than IE lets use xmlhttp.
+	objXMLHttp=new XMLHttpRequest() // Creates a xmlhttp request.
+	}else if (window.ActiveXObject){ // ElseIf we are using IE lets use Active X.
+	objXMLHttp=new ActiveXObject("Microsoft.XMLHTTP") // Creates a new Active X Object.
+	} // End ElseIf.
+	return objXMLHttp // Returns the xhttp object.
+} // Close Function
+
+	function run_duplicate_check(){
+		
+		var e1 = document.getElementById('Account'); 
+		var account = e1.options[e1.selectedIndex].value; 
+		
+		var e2 = document.getElementById('empemail'); 
+		//var salesperson = e2.options[e2.selectedIndex].innerHTML; 
+		var salesperson = e2.value; 
+				
+		var firstname = document.getElementById("firstname").value;
+		var lastname = document.getElementById("lastname").value;
+		
+		
+			xmlHttp_order_entry_check=GetXmlHttpObject(); // Creates a new Xmlhttp object.
+			if (xmlHttp_order_entry_check==null){ // If it cannot create a new Xmlhttp object.
+				alert ("Browser does not support HTTP Request") // Alert Them!
+				return // Returns.
+			} // End If.
+
+			var url="check_if_duplicate_user.php?account="+account+"&firstname="+firstname+"&lastname="+lastname; 
+			xmlHttp_order_entry_check.open("GET",url,true) // Opens the URL using GET
+			xmlHttp_order_entry_check.onreadystatechange = function () { // This is the most important piece of the puzzle, if onreadystatechange is equal to 4 than that means the request is done.
+				if (xmlHttp_order_entry_check.readyState == 4) { // If the onreadystatechange is equal to 4 lets show the response text.
+					if(xmlHttp_order_entry_check.responseText != ''){
+						var data = xmlHttp_order_entry_check.responseText
+						var data2 = JSON.parse(data);	
+						
+						var text = '';
+						for (var i in data2) { // ITERATES OVER LIST OF USERS THAT ARE ALREADY SET UP FOR ONLINE ORDERING.
+							data2[i].account;
+							data2[i].fname;
+							data2[i].lname;
+							data2[i].username; 
+							text += "<b>Acct#:</b> "+ data2[i].account + "<br/><b>First Name:</b> "+ data2[i].fname + "<br/><b>Last Name:</b> " + data2[i].lname + "<br/><b>Username:</b> " + data2[i].username+"<br/><br/>"; 
+						}
+						//alert(salesperson);
+						
+						$.jAlert({
+							  'content':
+								 '<h1><font color=red>WARNING - POSSIBLE DUPLICATE USER</font></h1>'+
+								   '<h4><b>These users below are already set up for online ordering. Could it be the same person? </b></h4>'+
+								   '<div> '+text+'  </div> ',
+							  'closeBtn': false,
+							  'closeOnEsc': false,
+							  'btns': [
+									{'text': 'Yep..I think you\'re right.This user already has a username.<br/>-Let me go back and see what I typed in.-', 'theme': 'green'},
+									{ 'text': 'It\'s ok. Not a duplicate.<br/> -Let me Submit this request.- ', 'theme': 'red', 'closeAlert': false,          'onClick': function(e){
+									/* If it was successful, redirect user */
+									
+									if(salesperson == 'pat@admiralexpress.com'){
+										alert('-ALERT \r\n Sorry Pat, you are not allowed to submit a request to set someone up for online ordering when they already have a username.\r\n\r\n If you have a username already set up that cannot login, please submit a Modify Request to have them unlocked and to reset their password.\r\n\r\n By default this will get emailed to whatever email address is on file for them so the new temporary password may not get emailed to you, unless you already have your email address associated with that username.\r\n\r\n If you want to log in as the customer, you will need to mention to us to make sure your email address is set instead of the customer\'s email address.');
+									}else{
+										document.forms['requestform'].submit();//IF BUTTON 2 IS PRESSED SUBMIT FORM REQUEST.
+									}
+									//window.location.href = 'google.com';
+									return false;
+								  }
+							   }
+									  ]
+					});
+						
+										
+						return false;
+					}else{
+						//document.forms["requestform"].submit();
+						//document.requestform.action='index.php';
+						//document.forms['requestform'].onsubmit();
+						document.forms['requestform'].submit();
+					}
+				} // End If.
+			}; // Close Function
+			xmlHttp_order_entry_check.send(null); // Sends NULL instead of sending data.
+		
+	}
+</script>

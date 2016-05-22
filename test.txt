@@ -1,0 +1,1 @@
+SELECT * FROM ae.authentication WHERE account = '10005' AND rewards_admin = 1

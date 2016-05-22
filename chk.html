@@ -1,0 +1,30 @@
+
+<script type="text/javascript">
+var xmlHttp // xmlHttp variable
+function GetXmlHttpObject(){ // This function we will use to call our xmlhttpobject.
+	var objXMLHttp=null // Sets objXMLHttp to null as default.
+	if (window.XMLHttpRequest){ // If we are using Netscape or any other browser than IE lets use xmlhttp.
+	objXMLHttp=new XMLHttpRequest() // Creates a xmlhttp request.
+	}else if (window.ActiveXObject){ // ElseIf we are using IE lets use Active X.
+	objXMLHttp=new ActiveXObject("Microsoft.XMLHTTP") // Creates a new Active X Object.
+	} // End ElseIf.
+	return objXMLHttp // Returns the xhttp object.
+} // Close Function
+
+function CheckUsername(username){ // This function we will use to check to see if a username is taken or not.
+	xmlHttp=GetXmlHttpObject() // Creates a new Xmlhttp object.
+	if (xmlHttp==null){ // If it cannot create a new Xmlhttp object.
+	alert ("Browser does not support HTTP Request") // Alert Them!
+	return // Returns.
+	} // End If.
+
+	var url="check.php?username="+username // Url that we will use to check the username.
+	xmlHttp.open("GET",url,true) // Opens the URL using GET
+	xmlHttp.onreadystatechange = function () { // This is the most important piece of the puzzle, if onreadystatechange is equal to 4 than that means the request is done.
+	if (xmlHttp.readyState == 4) { // If the onreadystatechange is equal to 4 lets show the response text.
+	document.getElementById("usernameresult").innerHTML = xmlHttp.responseText; // Updates the div with the response text from check.php
+	} // End If.
+	}; // Close Function
+	xmlHttp.send(null); // Sends NULL instead of sending data.
+} // Close Function.
+</script>

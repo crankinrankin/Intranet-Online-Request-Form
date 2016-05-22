@@ -1,0 +1,131 @@
+<script type="text/javascript">
+
+var xmlHttp // xmlHttp variable
+
+function GetXmlHttpObject(){ // This function we will use to call our xmlhttpobject.
+	var objXMLHttp=null // Sets objXMLHttp to null as default.
+	if (window.XMLHttpRequest){ // If we are using Netscape or any other browser than IE lets use xmlhttp.
+	objXMLHttp=new XMLHttpRequest() // Creates a xmlhttp request.
+	}else if (window.ActiveXObject){ // ElseIf we are using IE lets use Active X.
+	objXMLHttp=new ActiveXObject("Microsoft.XMLHTTP") // Creates a new Active X Object.
+	} // End ElseIf.
+	return objXMLHttp // Returns the xhttp object.
+} // Close Function
+
+	function run_rewards_check(){
+		
+		var e1 = document.getElementById('Account'); 
+		var account = e1.options[e1.selectedIndex].value; 
+		
+		var firstname = document.getElementById("firstname").value;
+		var lastname = document.getElementById("lastname").value;
+		
+		
+			xmlHttp_order_entry_check=GetXmlHttpObject(); // Creates a new Xmlhttp object.
+			if (xmlHttp_order_entry_check==null){ // If it cannot create a new Xmlhttp object.
+				alert ("Browser does not support HTTP Request") // Alert Them!
+				return // Returns.
+			} // End If.
+
+			var url="check_rewards.php?account="+account+"&firstname="+firstname+"&lastname="+lastname; 
+			xmlHttp_order_entry_check.open("GET",url,true) // Opens the URL using GET
+			xmlHttp_order_entry_check.onreadystatechange = function () { // This is the most important piece of the puzzle, if onreadystatechange is equal to 4 than that means the request is done.
+				if (xmlHttp_order_entry_check.readyState == 4) { // If the onreadystatechange is equal to 4 lets show the response text.
+					if(xmlHttp_order_entry_check.responseText != ''){
+						document.getElementById("rewards_list").selectedIndex = "2";
+						document.getElementById("rewards_list").disabled=true;
+						var data = xmlHttp_order_entry_check.responseText
+						var data2 = JSON.parse(data);	
+						
+						var text = '';
+						for (var i in data2) { // ITERATES OVER LIST OF USERS THAT ARE ALREADY SET UP FOR ONLINE ORDERING.
+							data2[i].account;
+							data2[i].fname;
+							data2[i].lname;
+							data2[i].username; 
+							text += "<b>Acct#:</b> "+ data2[i].account + "<br/><b>First Name:</b> "+ data2[i].fname + "<br/><b>Last Name:</b> " + data2[i].lname + "<br/><b>Username:</b> " + data2[i].username+"<br/><br/>"; 
+						}
+						
+						$.jAlert({
+							  'content':
+								 '<h1><font color=red>NOTICE - REWARDS PROGRAM ADMINISTRATOR FOUND</font></h1>'+
+								   '<h4>The Rewards Dropdown list behind this will now be disasbled & pre-selected for you.<br\><br\>The reason is because I found that the person(s) below is currently set up as the <b>Rewards Program Administrator</b> for this account.<br\><br\>That means the person(s) below is the only person that can see or redeem the company\'s accumulated rewards. This also means this person you are now setting up will be set where their points they earn for placing orders <u>will</u> count towards the company\'s grand total, however they <u>will not</u> be able to see or redeem what points they themselves have accumulated or what others at their company have accumulataed, like the person below can.<br\><br\>If you want them to be able to see and/or redeem rewards points you will need to mention that in the additional notes section below as they will have to be added as a Rewards Program Administrator as well, in that case.</h4>'+
+								   '<div> '+text+'  </div> ',
+							  'closeBtn': false,
+							  'closeOnEsc': false,
+							  'btns': [
+									{'text': 'OK', 'theme': 'green'}
+									  ]
+					});	
+						return false;
+					}else{
+						document.getElementById("rewards_list").selectedIndex = "0";
+						document.getElementById("rewards_list").disabled=false;
+						//document.forms["requestform"].submit();
+						//document.requestform.action='index.php';
+						//document.forms['requestform'].onsubmit();
+						//document.forms['requestform'].submit();
+					}
+				} // End If.
+			}; // Close Function
+			xmlHttp_order_entry_check.send(null); // Sends NULL instead of sending data.
+		
+	}
+	
+	
+	function run_rewards_check2(){
+		
+		var e1 = document.getElementById('Account'); 
+		var account = e1.options[e1.selectedIndex].value; 
+		
+		var firstname = document.getElementById("firstname").value;
+		var lastname = document.getElementById("lastname").value;
+		
+		
+			xmlHttp_order_entry_check=GetXmlHttpObject(); // Creates a new Xmlhttp object.
+			if (xmlHttp_order_entry_check==null){ // If it cannot create a new Xmlhttp object.
+				alert ("Browser does not support HTTP Request") // Alert Them!
+				return // Returns.
+			} // End If.
+
+			var url="check_rewards.php?account="+account+"&firstname="+firstname+"&lastname="+lastname; 
+			xmlHttp_order_entry_check.open("GET",url,true) // Opens the URL using GET
+			xmlHttp_order_entry_check.onreadystatechange = function () { // This is the most important piece of the puzzle, if onreadystatechange is equal to 4 than that means the request is done.
+				if (xmlHttp_order_entry_check.readyState == 4) { // If the onreadystatechange is equal to 4 lets show the response text.
+					if(xmlHttp_order_entry_check.responseText == ''){
+						document.getElementById("rewards_list").selectedIndex = "0";
+						//document.getElementById("rewards_list").disabled=true;
+												
+						$.jAlert({
+							  'content':
+								 '<h1><font color=red>NOTICE -<br/>NO REWARDS PROGRAM ADMINISTRATOR FOUND</font></h1>'+
+								   '<h4>There has to be a <b>Rewards Program Administrator</b> already set up for this account, before you can select this option.... unless this person will be the Rewards Program Administrator.<br/><br/>If you want this person to be the Administrator, you may skip reading the rest of this msg and simply click the <font color=\'blue\'>Blue Button</font> below, otherwise please be aware of the following:<br/><br/>If you submit this person without a Program Administrator already set up, this persons points will not count towards anything and they could potentially be lost, since by selecting this option you are saying that you want the Rewards Points that this person accumulates to <u>not be redeemable</u> by they themselves but instead go towards the company\'s total rewards, in which case you need a Rewards Program Administrator to be set up first on this account.<br/><br/>So what do you do now you may ask? That depends on whether or not the person that should manage the Rewards Points for this account is already set up for Online Ordering or not. If they are, open another tab & simply submit a MODIFY REQUEST for them and tell us to make them the Rewards Program Administrator. Once you hear back thats done, you may submit this request.<br/><br/>If the person who will be managing & redeeming Rewards Points is not already set up for Online Ordering, open another tab and Submit a request to set them up for Online Ordering and in the Additional Notes section tell us to make them the Accounts Rewards Administrator. Once you hear back that is done, you may submit this request. </h4>'+
+								   '<div> </div> ',
+							  'closeBtn': false,
+							  'closeOnEsc': false,
+							  'btns': [
+									{'text': 'I Understand. Let me go back and I will submit a request to set up a Program Admin', 'theme': 'green'},
+									{ 'text': 'This person will be the <b>Rewards Program Administrator</b>', 'theme': 'blue', 'closeAlert': true,          'onClick': function(e){
+									document.getElementById("rewards_list").selectedIndex = "2";
+									$("#comment").text("PLEASE MAKE THIS PERSON THE REWARDS PROGRAM ADMINISTRATOR. ");
+									//document.getElementById("rewards_list").disabled=true;
+								  }
+							   }
+									  ]
+					});	
+						return false;
+					}//else{
+						document.getElementById("rewards_list").selectedIndex = "0";
+						document.getElementById("rewards_list").disabled=false;
+						//document.forms["requestform"].submit();
+						//document.requestform.action='index.php';
+						//document.forms['requestform'].onsubmit();
+						//document.forms['requestform'].submit();
+					//}
+				} // End If.
+			}; // Close Function
+			xmlHttp_order_entry_check.send(null); // Sends NULL instead of sending data.
+		
+	}
+	
+</script>
